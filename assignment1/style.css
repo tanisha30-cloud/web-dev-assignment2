@@ -1,0 +1,203 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body{
+    background: linear-gradient(135deg,#48c6ef,#6f86d6);
+    min-height:100vh;
+}
+
+/* PAGE */
+.page{
+    max-width:1100px;
+    margin:auto;
+    padding:30px;
+}
+
+.page h1{
+    color:white;
+    text-align:center;
+    margin-bottom:25px;
+    font-size:32px;
+    font-weight:700;
+    letter-spacing:1px;
+    text-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* GRID LAYOUT */
+.dashboard{
+    display:grid;
+    grid-template-columns: 1fr 2fr;
+    gap:25px;
+    align-items:stretch;   /* FIXED */
+}
+
+/* CARD STYLE */
+.card{
+    background:rgba(255,255,255,0.95);
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    transition:0.3s ease;
+    backdrop-filter: blur(6px);
+
+    height:100%;   /* FIXED */
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+}
+
+/* HEADINGS */
+.card h2{
+    color:#5b6bdc;
+    margin-bottom:15px;
+    font-size:22px;
+    font-weight:700;
+}
+
+/* FORM */
+.form-card label{
+    font-size:14px;
+    margin-top:12px;
+    display:block;
+    font-weight:600;
+    color:#374151;
+}
+
+.form-card input,
+.form-card select,
+.form-card textarea{
+    width:100%;
+    padding:11px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    margin-top:6px;
+    outline:none;
+    transition:0.3s;
+    background:#f9fafb;
+    font-size:14px;
+}
+
+/* INPUT FOCUS EFFECT */
+.form-card input:focus,
+.form-card select:focus,
+.form-card textarea:focus{
+    border:1px solid #667eea;
+    box-shadow:0 0 0 3px rgba(102,126,234,0.3);
+    background:white;
+}
+
+/* TEXTAREA */
+textarea{
+    height:80px;
+    resize:none;
+}
+
+/* BUTTONS */
+button{
+    border:none;
+    padding:12px 16px;
+    border-radius:12px;
+    cursor:pointer;
+    background:#e5e7eb;
+    margin-top:15px;
+    font-weight:600;
+    font-size:14px;
+    transition:0.3s ease;
+}
+
+/* BUTTON HOVER */
+button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(0,0,0,0.2);
+}
+
+/* BUTTON ACTIVE (CLICK EFFECT) */
+button:active{
+    transform:scale(0.95);
+}
+
+/* PRIMARY BUTTON */
+.primary{
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    color:white;
+    width:100%;
+}
+
+.primary:hover{
+    background: linear-gradient(135deg,#5a6fe5,#6a3f99);
+}
+
+/* EVENTS CARD FIX */
+.events-card{
+    display:flex;
+    flex-direction:column;
+}
+
+/* EVENTS ACTIONS */
+.actions{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.actions button{
+    flex:1;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    color:white;
+    padding:12px;
+}
+
+.actions button:hover{
+    background: linear-gradient(135deg,#5568e0,#5f3794);
+}
+
+/* EMPTY STATE FIX */
+#empty{
+    text-align:center;
+    color:#64748b;
+    padding:40px 10px;
+    border:2px dashed #cbd5e1;
+    border-radius:14px;
+    font-size:15px;
+    background:rgba(255,255,255,0.6);
+
+    flex:1;   /* FIXED */
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* DOM CARD */
+.dom-card{
+    margin-top:25px;
+    grid-column: 1 / -1;
+}
+
+/* DOM BOX */
+.dom-box{
+    background:#f1f5f9;
+    padding:14px;
+    border-radius:12px;
+    margin-top:10px;
+    border-left:5px solid #667eea;
+    font-size:14px;
+    color:#334155;
+    line-height:1.5;
+}
+
+/* RESPONSIVE */
+@media(max-width:800px){
+    .dashboard{
+        grid-template-columns:1fr;
+    }
+
+    .page h1{
+        font-size:26px;
+    }
+}
