@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Async Weather Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #eef2fb;
+            --surface: #ffffff;
+            --card: #ffffff;
+            --border: #dde3f5;
+            --accent: #5b7cfa;
+            --accent2: #ff7043;
+            --accent-light: #eaedff;
+            --text: #1e2340;
+            --muted: #8e97b8;
+            --shadow: 0 4px 24px rgba(91, 124, 250, 0.10);
+            --shadow-hover: 0 8px 32px rgba(91, 124, 250, 0.18);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg);
+            padding: 36px 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -120px;
+            left: -120px;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(91,124,250,0.13) 0%, transparent 70%);
+            z-index: 0;
+            animation: blobFloat 8s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -100px;
+            right: -100px;
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, rgba(255,112,67,0.10) 0%, transparent 70%);
+            z-index: 0;
+            animation: blobFloat 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes blobFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(30px) scale(1.05); }
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .parent-card {
+            display: flex;
+            gap: 22px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text);
+            margin-bottom: 38px;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        h1 span {
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 22px;
+            width: 100%;
+            border: 1.5px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            color: var(--muted);
+            font-size: 0.7rem;
+            font-family: 'DM Mono', monospace;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+        }
+
+        input::placeholder {
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(91, 124, 250, 0.10);
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--accent), #7c6ffa);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+            box-shadow: 0 4px 14px rgba(91, 124, 250, 0.28);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(91, 124, 250, 0.36);
+            opacity: 0.92;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .weather-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            border-left: 4px solid var(--accent);
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            animation: fadeUp 0.35s ease forwards;
+            opacity: 0;
+        }
+
+        .weather-item:nth-child(1) { animation-delay: 0.05s; }
+        .weather-item:nth-child(2) { animation-delay: 0.10s; }
+        .weather-item:nth-child(3) { animation-delay: 0.15s; }
+        .weather-item:nth-child(4) { animation-delay: 0.20s; }
+        .weather-item:nth-child(5) { animation-delay: 0.25s; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .weather-item:hover {
+            background: var(--accent-light);
+            border-left-color: var(--accent2);
+            transform: translateX(4px);
+            box-shadow: 0 2px 12px rgba(91,124,250,0.08);
+        }
+
+        .weather-item label {
+            color: var(--muted);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .weather-item span {
+            color: var(--text);
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .history {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .history button {
+            margin: 0;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: var(--accent-light);
+            color: var(--accent);
+            border: 1.5px solid rgba(91,124,250,0.2);
+            font-size: 0.82rem;
+            font-weight: 700;
+            box-shadow: none;
+            letter-spacing: 0.3px;
+            transition: all 0.2s;
+        }
+
+        .history button:hover {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 14px rgba(91, 124, 250, 0.28);
+            transform: translateY(-1px);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        @media (max-width:700px) {
+            .parent-card { flex-direction: column; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>🌤 <span>Async Weather Tracker</span></h1>
+
+        <div class="parent-card">
+            <div class="card">
+                <h3>Search City</h3>
+                <div class="input-group">
+                    <input id="cityInput" placeholder="Delhi, London">
+                    <button id="searchBtn">Search</button>
+                </div>
+                <br>
+                <br>
+                <h3>Search History</h3>
+                <div class="history" id="history"></div>
+            </div>
+
+            <div class="card">
+                <h3>Weather Info</h3>
+                <div id="weather"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const API_KEY = "274932941dc860d7140bbe2db64be31b";
+        //    const API_KEY = "af9f63c59a649f27d602b96a43d0bd14";
+
+        const weatherBox = document.getElementById("weather");
+        const historyBox = document.getElementById("history");
+
+        async function getWeather(city) {
+            const res = await fetch(
+                `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+            );
+            if (!res.ok) {
+                alert("city not found");
+                throw new Error("City not found");
+            }
+            const data = await res.json();
+            return data;
+        }
+
+        document.getElementById("searchBtn").onclick = () => {
+            const city = cityInput.value.trim();
+            if (city) search(city);
+        };
+
+        function renderWeather(d) {
+            weatherBox.innerHTML = `
+        <div class="weather-item"><label>City</label><span>${d.name}, ${d.sys.country}</span></div>
+        <div class="weather-item"><label>Temperature</label><span>${d.main.temp} °C</span></div>
+        <div class="weather-item"><label>Weather</label><span>${d.weather[0].main}</span></div>
+        <div class="weather-item"><label>Humidity</label><span>${d.main.humidity}%</span></div>
+        <div class="weather-item"><label>Wind Speed</label><span>${d.wind.speed} m/s</span></div>
+    `;
+        }
+
+        function saveHistory(city) {
+            const history = JSON.parse(localStorage.getItem("weatherHistory") || "[]");
+            if (!history.map(c => c.toLowerCase()).includes(city.toLowerCase())) {
+                history.unshift(city);
+                if (history.length > 10) history.pop();
+                localStorage.setItem("weatherHistory", JSON.stringify(history));
+            }
+            showHistory();
+        }
+
+        function showHistory() {
+            const history = JSON.parse(localStorage.getItem("weatherHistory") || "[]");
+            historyBox.innerHTML = history.length
+                ? history.map(city =>
+                    `<button onclick="search('${city}')">${city}</button>`
+                  ).join("")
+                : "<p style='color:#aaa;font-size:14px'>No history yet.</p>";
+        }
+
+        async function search(city) {
+            weatherBox.innerHTML = "";
+            try {
+                const data = await getWeather(city);
+                renderWeather(data);
+                saveHistory(data.name);
+            } catch (error) {
+                weatherBox.innerHTML = `<p style="color:red">${error.message}</p>`;
+            }
+        }
+
+        cityInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                const city = cityInput.value.trim();
+                if (city) search(city);
+            }
+        });
+
+        showHistory();
+    </script>
+</body>
+
+</html>
